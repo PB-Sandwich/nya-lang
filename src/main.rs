@@ -1,4 +1,4 @@
-use crate::state::NyaState;
+use crate::{instruction::Instruction, state::NyaState};
 
 pub mod instruction;
 pub mod object;
@@ -6,19 +6,39 @@ pub mod state;
 
 fn main() {
     let mut ns = NyaState::new();
-    ns.push_value(0.5);
-    ns.push_value("test");
-    ns.push_value([0, 1, 4, 5]);
-    let n = ns.get_number(-3);
+    let program_basic: Vec<Instruction> = vec![
+        Instruction::PushInt(2),
+        Instruction::PushInt(3),
+        Instruction::Add,
+        Instruction::Print,
+        Instruction::Halt,
+    ];
+    println!("basic program(adds 2 and 3)");
+    ns.run_instructions(&program_basic);
+    let program1: Vec<Instruction> = vec![
+        Instruction::PushInt(69),
+        Instruction::Jump(3),
+        Instruction::PushInt(2),
+        Instruction::PushInt(3),
+        Instruction::Add,
+        Instruction::Print,
+        Instruction::Halt,
+    ];
+    println!("basic program with jump(skips the addition and just prints)");
+    ns.run_instructions(&program1);
 
-    ns.get_index(-1, 1);
-    let i = ns.get_int(-1);
-
-    let s = ns.get_string(-2);
-    println!("{s:?}");
-    println!("{n:?}");
-    println!("{i:?}");
-    ns.pop_stack(4);
-    ns.set_global("test", [0.5]);
-    ns.garbage_collect();
+    let program2: Vec<Instruction> = vec![
+        Instruction::PushInt(2),
+        Instruction::PushInt(3),
+        Instruction::Add,
+        Instruction::PushInt(5),
+        Instruction::Equal,
+        Instruction::JumpIf(1),
+        Instruction::PushFloat(420.69),
+        Instruction::PushInt(8008),
+        Instruction::Print,
+        Instruction::Halt,
+    ];
+    println!("basic program with jump and equality(skips adding float to stack)");
+    ns.run_instructions(&program2);
 }
