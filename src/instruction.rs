@@ -1,11 +1,17 @@
-use crate::object::NyaPrimativeType;
+use crate::object::NyaPrimitiveType;
 
 pub enum Instruction {
-    Push(NyaPrimativeType),
+    PushInt(i64),
+    PushFloat(f64),
     Pop,
-    SetGlobal(String, NyaPrimativeType),
-    RemoveGlobal(String),
-    PushGlobal(String),
-    PopGlobal(String),
     Add,
+    Jump(usize),
+    JumpIf(usize),
+    SetGlobal,
+    GetGlobal,
+    Print,
+    Equal,
+    Not,
+    CollectGarbage,
+    Halt,
 }
